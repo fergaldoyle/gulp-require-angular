@@ -50,7 +50,8 @@ module.exports = function (mainModule, opts) {
 	var files = [], allModules = {}, base,
 		options = extend({
 			filename: PLUGIN_NAME + 'generated.js',
-			base: './'
+			base: './',
+			errorOnMissingModules: false
 		}, opts);
 
 	return es.through(function write(file) {
@@ -122,8 +123,14 @@ module.exports = function (mainModule, opts) {
 		file.path = base + '/' + options.filename;
 
 		// if any module cannot be found, it will be in missing
-		if (missing.length) { // emit error but don't exit			
-			this.emit('error', new PluginError(PLUGIN_NAME, 'Could not find a file where the follow modules are defined: ' + JSON.stringify(missing)));
+		var msg;
+		if (missing.length) {
+			msg = 'Could not find a file where the follow modules are defined: ' + JSON.stringify(missing);
+			if (options.errorOnMissingModules) {
+				return this.emit('error', new PluginError(PLUGIN_NAME, msg));
+			} else {
+				gutil.log(msg);
+			}
 		}
 
 		this.emit('data', file);

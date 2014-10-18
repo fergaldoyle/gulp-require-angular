@@ -37,12 +37,10 @@ describe('gulp-require-angular', function () {
 				});
 		});
 
-
 		it('should emit error if module dependency is not found', function (done) {
 			gulp.src(fixtures('**\/*.js', 'C'))
-				.pipe(requireAngular('myApp'))
+				.pipe(requireAngular('myApp', { errorOnMissingModules: true }))
 				.on('error', function (err) {
-					//	err.message.should.eql('Streaming not supported');
 					done();
 				});
 		});
