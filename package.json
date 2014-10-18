@@ -1,5 +1,5 @@
 {
-  "name": "gulp-auto-require-angular",
+  "name": "gulp-require-angular",
   "version": "0.3.0",
   "description": "CJS require AngularJS modules without having to type require()",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fergaldoyle/gulp-auto-require-angular"
+    "url": "https://github.com/fergaldoyle/gulp-require-angular"
   },
   "keywords": [
     "gulpplugin",
@@ -19,9 +19,9 @@
   "author": "fergaldoyle",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fergaldoyle/gulp-auto-require-angular/issues"
+    "url": "https://github.com/fergaldoyle/gulp-require-angular/issues"
   },
-  "homepage": "https://github.com/fergaldoyle/gulp-auto-require-angular",
+  "homepage": "https://github.com/fergaldoyle/gulp-require-angular",
   "dependencies": {
     "gulp-util": "^3.0.1",
     "event-stream": "^3.1.7",
