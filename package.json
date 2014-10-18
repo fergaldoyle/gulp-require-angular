@@ -1,6 +1,6 @@
 {
   "name": "gulp-auto-require-angular",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "CJS require AngularJS modules without having to type require()",
   "main": "index.js",
   "scripts": {

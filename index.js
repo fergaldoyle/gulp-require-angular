@@ -9,12 +9,13 @@ var File = gutil.File;
 const PLUGIN_NAME = 'gulp-require-angular';
 const ANGULAR_MODULE = 'ng';
 
-/* ### dot.js template: ###
-{{~it :v}}
-require('{{=v}}');\n
-{{~}}
-*/
-function template(it) { var out = ''; var arr1 = it; if (arr1) { var v, i1 = -1, l1 = arr1.length - 1; while (i1 < l1) { v = arr1[i1 += 1]; out += 'require(\'' + (v) + '\');\n'; } } return out; }
+function output(a) {
+	var out = '';
+	a.forEach(function (v) {
+		out += "require('" + v + "');\n";
+	});
+	return out;
+}
 
 function findRequiredModules(allModules, mainModule) {
 	// recursive function, dive into the dependencies
@@ -48,7 +49,7 @@ module.exports = function (mainModule, opts) {
 	if (!mainModule) throw new PluginError(PLUGIN_NAME, 'Missing mainModule argument');
 	var files = [], allModules = {}, base,
 		options = extend({
-			filename: PLUGIN_NAME + '.js',
+			filename: PLUGIN_NAME + 'generated.js',
 			base: './'
 		}, opts);
 
@@ -87,32 +88,25 @@ module.exports = function (mainModule, opts) {
 			if (module === ANGULAR_MODULE) {
 				return;
 			}
+			var isFound = false;
 			files.forEach(function (file) {
-
-				// if this module does not appear as a
-				// module definition in this file, then add
-				// to missing and return
-				if (!file.deps.modules[module]) {
-					pushDistinct(missing, module);
-				//	return;
-				}
-
 				if (file.deps.modules[module]) {
 					pushDistinct(defines, './' + file.file);
+					isFound = true;
 				} else if (file.deps.dependencies.indexOf(module) > -1) {
 					pushDistinct(references, './' + file.file);
 				}
 			});
+			// if the module definition was not found in
+			// any file, push to missing array
+			if (!isFound) {
+				pushDistinct(missing, module);
+			}
 		});
 
 		// if a non existant mainModule is passed, defines will be empty
 		if (!defines.length) {
 			return this.emit('error', new PluginError(PLUGIN_NAME, 'Did not find any file where angular module \'' + mainModule + '\' is defined'));
-		}
-
-		// if any module cannot be found, it will be in missing
-		if (missing.length) {
-			return this.emit('error', new PluginError(PLUGIN_NAME, 'Could not find these modules:' + JSON.stringify(missing)));
 		}
 
 		// now have two arrays of distinct file paths, defines and references
@@ -123,9 +117,14 @@ module.exports = function (mainModule, opts) {
 		});
 
 		var file = new File();
-		file.contents = new Buffer(template(finalSet));
+		file.contents = new Buffer(output(finalSet).trim());
 		file.base = base;
 		file.path = base + '/' + options.filename;
+
+		// if any module cannot be found, it will be in missing
+		if (missing.length) { // emit error but don't exit			
+			this.emit('error', new PluginError(PLUGIN_NAME, 'Could not find a file where the follow modules are defined: ' + JSON.stringify(missing)));
+		}
 
 		this.emit('data', file);
 		this.emit('end');
