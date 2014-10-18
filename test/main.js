@@ -12,7 +12,7 @@ var fixtures = function (glob, dir) {
 
 describe('gulp-require-angular', function () {
 	describe('requireAngular()', function () {
-		
+
 		it('should throw, when arguments are missing', function () {
 			(function () {
 				requireAngular();
@@ -27,7 +27,7 @@ describe('gulp-require-angular', function () {
 					done();
 				});
 		});
-		
+
 		it('should emit error when bad mainModule is passed', function (done) {
 			gulp.src(fixtures('**\/*.js'))
 				.pipe(requireAngular('foob'))
@@ -37,15 +37,16 @@ describe('gulp-require-angular', function () {
 				});
 		});
 
+
 		it('should emit error if module dependency is not found', function (done) {
 			gulp.src(fixtures('**\/*.js', 'C'))
 				.pipe(requireAngular('myApp'))
 				.on('error', function (err) {
-				//	err.message.should.eql('Streaming not supported');
+					//	err.message.should.eql('Streaming not supported');
 					done();
 				});
 		});
-		
+
 		it('should emit end', function (done) {
 			gulp.src(fixtures('**\/*.js'))
 				.pipe(requireAngular('myApp'))
