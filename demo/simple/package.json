@@ -4,6 +4,6 @@
   "description": "",
   "devDependencies": {
     "gulp": "^3.8.8",
-    "gulp-require-angular": "^0.4.0"
+    "gulp-require-angular": "^0.4.2"
   }
 }

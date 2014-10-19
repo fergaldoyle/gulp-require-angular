@@ -13,6 +13,7 @@ angular.module('myApp').controller('charts', require('./charts'));
 ### How
 
 See [demos for working examples](https://github.com/fergaldoyle/gulp-require-angular/tree/master/demo).
+
 Write your app using standard AngularJS syntax. e.g.
 
 app.js
