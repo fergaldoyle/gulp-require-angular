@@ -6,9 +6,9 @@ A gulp plugin which scans your AngularJS project  source files and generates a s
 
 ### Why
 I like the idea of `require()`ing with AngularJS but find it can get a bit messy, with lots of relative paths which are a pain if you want to move files around. Also something like this (which seems common enough) I don't like. (controller name in one file, controller function in another)
-	
-	angular.module('myApp').controller('charts', require('./charts'));
-
+```javascript	
+angular.module('myApp').controller('charts', require('./charts'));
+```
 
 ### How
 
