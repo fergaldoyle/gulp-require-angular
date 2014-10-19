@@ -101,6 +101,17 @@ describe('gulp-require-angular', function () {
 				.pipe(assert.end(done));
 		});
 
+		it('should rebase require url when base option is set', function (done) {
+			gulp.src(fixtures('**\/*.js'))
+				.pipe(requireAngular('myApp', { path: './foopath/' }))
+				.pipe(assert.first(function (f) {
+					f.contents.toString().should
+					.containEql('./foopath/app.js')
+					.and.containEql('./foopath/moduleA/moduleA.config.js')
+				}))
+				.pipe(assert.end(done));
+		});
+
 		it('should order the files correctly', function (done) {
 			gulp.src(fixtures('**\/*.js'))
 				.pipe(requireAngular('myApp'))
@@ -116,16 +127,14 @@ describe('gulp-require-angular', function () {
 			gulp.src(fixtures('**\/*.js', 'B'))
 				.pipe(requireAngular('thirdParty'))
 				.pipe(assert.first(function (f) {
-
 					f.contents.toString().should
 						.containEql('./app.js')
 						.and.containEql('./ui/angular-ui-router.js')
 						.and.containEql('./ui/keypress.js')
 						.and.containEql('./ng/angular-route.js')
 						.and.containEql('./ng/angular-sanitize.js')
-
 				}))
-				.pipe(gulp.dest('./'))
+				//.pipe(gulp.dest('./'))
 				.pipe(assert.end(done));
 		});
 

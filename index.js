@@ -49,8 +49,8 @@ module.exports = function (mainModule, opts) {
 	if (!mainModule) throw new PluginError(PLUGIN_NAME, 'Missing mainModule argument');
 	var files = [], allModules = {}, base,
 		options = extend({
-			filename: PLUGIN_NAME + 'generated.js',
-			base: './',
+			filename: PLUGIN_NAME + '.generated.js',
+			path: './',
 			errorOnMissingModules: false
 		}, opts);
 
@@ -92,10 +92,10 @@ module.exports = function (mainModule, opts) {
 			var isFound = false;
 			files.forEach(function (file) {
 				if (file.deps.modules[module]) {
-					pushDistinct(defines, './' + file.file);
+					pushDistinct(defines, options.path + file.file);
 					isFound = true;
 				} else if (file.deps.dependencies.indexOf(module) > -1) {
-					pushDistinct(references, './' + file.file);
+					pushDistinct(references, options.path + file.file);
 				}
 			});
 			// if the module definition was not found in
