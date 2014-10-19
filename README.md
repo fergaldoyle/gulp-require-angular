@@ -12,6 +12,7 @@ angular.module('myApp').controller('charts', require('./charts'));
 
 ### How
 
+See [demos for working examples](https://github.com/fergaldoyle/gulp-require-angular/tree/master/demo).
 Write your app using standard AngularJS syntax. e.g.
 
 app.js
@@ -88,3 +89,4 @@ The base path to apply to the file paths in the require statements
 
 #####errorOnMissingModules
 When a module appears in the dependency tree, but cannot be found in a file, emit an error or not.
+
