@@ -2,3 +2,4 @@
 demo/*
 node_modules/*
 gulp-require-angulargenerated.js
+gulp-require-angular.generated.js
