@@ -1,5 +1,4 @@
 .bin
-demo/*
 node_modules/*
-gulp-require-angulargenerated.js
+demo/*/node_modules/*
 gulp-require-angular.generated.js
