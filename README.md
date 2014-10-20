@@ -1,6 +1,8 @@
 gulp-require-angular
 =========================
 
+[![Build Status](https://travis-ci.org/fergaldoyle/gulp-require-angular.svg?branch=master)](https://travis-ci.org/fergaldoyle/gulp-require-angular)
+
 ### What
 A gulp plugin which scans your AngularJS project  source files and generates a single js file full of `require()` statements which can be then used as an entry file for Browserify or Webpack. Only AngularJS modules which appear in the dependency tree of your `mainModule` are `require()`'d.
 
