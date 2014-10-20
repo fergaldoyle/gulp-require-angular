@@ -9,20 +9,24 @@ function logAndContinue(err) {
 }
 
 
-
 // ################ Example using gulp-webpack plugin ################ //
 
-gulp.task('watch', function () {
-	// do it once
-	gulp.start('requireAngularwithGulpWebpackPlugin');
-	
-	// then watch - make sure to ignore the generated js file
-	gulp.watch(['src/**/*.js', '!src/gulp-require-angular.generated.js'], ['requireAngularwithGulpWebpackPlugin']);
+// 'requireAngular-gulpWebpack' is a dependency 
+// of the 'watch' task so will run to create an 
+// inital build before any files are changed
+gulp.task('watch', ['requireAngular-gulpWebpack'], function () {
+	// make sure to ignore the generated js file
+	gulp.watch([
+		'src/**/*.js',
+		'!src/gulp-require-angular.generated.js'
+	], [
+		'requireAngular-gulpWebpack'
+	]);
 });
 
-gulp.task('requireAngularwithGulpWebpackPlugin', function () {
+gulp.task('requireAngular-gulpWebpack', function () {
 
-	gulp.src(['./src/**/*.js'])
+	gulp.src(['src/**/*.js'])
         .pipe(requireAngular('myApp'))
         // file needs to physically exist for webpack
 		// use gulp.dest to create it
@@ -37,18 +41,24 @@ gulp.task('requireAngularwithGulpWebpackPlugin', function () {
         .pipe(gulp.dest('dist/'));
 });
 
+// ################################################################### //
+
+
 
 
 
 // ################ Example using webpack directly (faster incremental builds) ################ //
 
-gulp.task('watch2', function () {
-	// do it once
-	gulp.start('requireAngularWithManualWebpack');
-	
-	// then watch - make sure to ignore the generated js file
-	gulp.watch(['src/**/*.js', '!src/gulp-require-angular.generated.js'], [
-		'requireAngularWithManualWebpack', 
+// 'requireAngular-webpack' is a dependency 
+// of the 'watch' task so will run to create an 
+// inital build before any files are changed
+gulp.task('watch2', ['requireAngular-webpack'], function () {
+	// make sure to ignore the generated js file
+	gulp.watch([
+		'src/**/*.js',
+		'!src/gulp-require-angular.generated.js'
+	], [
+		'requireAngular-webpack',
 		'someTaskAfterWebpack'
 	]);
 });
@@ -61,30 +71,33 @@ var compiler = webpack({
 	}
 });
 
-gulp.task('requireAngularWithManualWebpack', function (cb) {
-	gulp.src(['./src/**/*.js'])
+gulp.task('requireAngular-webpack', function (cb) {
+	gulp.src(['src/**/*.js'])
         .pipe(requireAngular('myApp'))
 		.on('error', logAndContinue) // don't break watch on error
         .pipe(gulp.dest('src/'))
-		.on('end', function (err, files) {
+		.on('end', function () {
+			// run the webpack compiler - will do fast incremental builds
 			compiler.run(function (err, stats) {
 				gutil.log(stats.toString({
 					colors: true,
 					hash: false,
 					chunks: false
 				}));
+				// must callback to let gulp know when this task is finished
 				cb();
 			});
 
 		});
 });
 
-gulp.task('someTaskAfterWebpack', ['requireAngularWithManualWebpack'], function () {
+gulp.task('someTaskAfterWebpack', ['requireAngular-webpack'], function () {
 	console.log('running someTaskAfterWebpack');
 });
 
+// ############################################################################################ //
 
 gulp.task('default', [
-	//'watch',
+	'watch',
 	//'watch2'
 ]);

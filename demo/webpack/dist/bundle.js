@@ -49,10 +49,10 @@
 
 	__webpack_require__(/*! ./app.js */ 1);
 	__webpack_require__(/*! ./moduleA/moduleA.js */ 2);
-	__webpack_require__(/*! ./common/piechart.js */ 3);
+	__webpack_require__(/*! ./common/piechart.js */ 4);
 	__webpack_require__(/*! ./moduleB/moduleB.js */ 5);
-	__webpack_require__(/*! ./moduleA/moduleA.ctrl.js */ 6);
-	__webpack_require__(/*! ./moduleB/moduleB.ctrl.js */ 7);
+	__webpack_require__(/*! ./moduleA/moduleA.ctrl.js */ 3);
+	__webpack_require__(/*! ./moduleB/moduleB.ctrl.js */ 6);
 
 /***/ },
 /* 1 */
@@ -66,7 +66,7 @@
 	.config(function () {
 		// stuff
 	})
-
+	 
 	.run(function () {
 		// stuff
 	});
@@ -90,12 +90,23 @@
 
 /***/ },
 /* 3 */
+/*!*************************************!*\
+  !*** ./src/moduleA/moduleA.ctrl.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	angular.module('moduleA').controller(function ($scope) {
+		// stuff
+	});
+
+/***/ },
+/* 4 */
 /*!********************************!*\
   !*** ./src/common/piechart.js ***!
   \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var nonAngularPieChart = __webpack_require__(/*! ./nonAngularPieChart */ 4);
+	var nonAngularPieChart = __webpack_require__(/*! ./nonAngularPieChart */ 7);
 
 	angular.module('pieChart', []).directive('pieChart', function () {
 		return {
@@ -106,18 +117,6 @@
 			}
 		};
 	});
-
-/***/ },
-/* 4 */
-/*!******************************************!*\
-  !*** ./src/common/nonAngularPieChart.js ***!
-  \******************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	// some pre-existing charting library
-	module.exports = function (el, options) {
-
-	};
 
 /***/ },
 /* 5 */
@@ -139,17 +138,6 @@
 /***/ },
 /* 6 */
 /*!*************************************!*\
-  !*** ./src/moduleA/moduleA.ctrl.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	angular.module('moduleA').controller(function ($scope) {
-		// stuff
-	});
-
-/***/ },
-/* 7 */
-/*!*************************************!*\
   !*** ./src/moduleB/moduleB.ctrl.js ***!
   \*************************************/
 /***/ function(module, exports, __webpack_require__) {
@@ -157,6 +145,18 @@
 	angular.module('moduleB').controller(function ($scope) {
 		// stuff
 	});
+
+/***/ },
+/* 7 */
+/*!******************************************!*\
+  !*** ./src/common/nonAngularPieChart.js ***!
+  \******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// some pre-existing charting library
+	module.exports = function (el, options) {
+
+	};
 
 /***/ }
 /******/ ])
