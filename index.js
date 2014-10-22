@@ -3,6 +3,9 @@ var ngDep = require('ng-dependencies');
 var extend = require('extend');
 var gutil = require('gulp-util');
 var Buffer = require('buffer').Buffer;
+var mainBowerFiles = require('main-bower-files');
+var fs = require('fs');
+var path = require('path');
 var PluginError = gutil.PluginError;
 var File = gutil.File;
 
@@ -16,7 +19,17 @@ function output(a) {
 	});
 	return out;
 }
-
+/*
+console.log('Current directory: ' + process.cwd());
+var bowerFiles = mainBowerFiles();
+console.log('bowerFiles', bowerFiles);
+bowerFiles.forEach(function (file) {
+	var relative = path.relative('./src', file);
+	//console.log(relative);
+	var contents = fs.readFileSync(file);
+	//console.log(ngDep(contents));
+});
+*/
 function findRequiredModules(allModules, mainModule) {
 	// recursive function, dive into the dependencies
 	function dive(name) {
@@ -47,10 +60,12 @@ function pushDistinct(array, item) {
 
 module.exports = function (mainModule, opts) {
 	if (!mainModule) throw new PluginError(PLUGIN_NAME, 'Missing mainModule argument');
-	var files = [], allModules = {}, base,
+	var files = [], allModules = {},
 		options = extend({
 			filename: PLUGIN_NAME + '.generated.js',
-			path: './',
+			rebase: './',
+			relativeTo: './src',
+			bower: true,
 			errorOnMissingModules: false
 		}, opts);
 
@@ -67,9 +82,8 @@ module.exports = function (mainModule, opts) {
 		extend(allModules, deps.modules);
 
 		// build up listing of file paths and deps
-		base = file.base;
 		files.push({
-			file: file.relative.replace(/\\/g, '/'),
+			file: path.relative(options.relativeTo, file.base + file.relative).replace(/\\/g, '/'),
 			deps: deps
 		});
 	},
@@ -92,10 +106,12 @@ module.exports = function (mainModule, opts) {
 			var isFound = false;
 			files.forEach(function (file) {
 				if (file.deps.modules[module]) {
-					pushDistinct(defines, options.path + file.file);
-					isFound = true;
+					if (!isFound) {
+						pushDistinct(defines, options.rebase + file.file);
+						isFound = true;
+					}
 				} else if (file.deps.dependencies.indexOf(module) > -1) {
-					pushDistinct(references, options.path + file.file);
+					pushDistinct(references, options.rebase + file.file);
 				}
 			});
 			// if the module definition was not found in
@@ -119,8 +135,8 @@ module.exports = function (mainModule, opts) {
 
 		var file = new File();
 		file.contents = new Buffer(output(finalSet).trim());
-		file.base = base;
-		file.path = base + '/' + options.filename;
+		file.base = __dirname;
+		file.path = __dirname + '/' + options.filename;
 
 		// if any module cannot be found, it will be in missing
 		var msg;

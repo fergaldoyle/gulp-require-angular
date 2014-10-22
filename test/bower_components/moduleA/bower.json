@@ -1,0 +1,5 @@
+{
+  "name": "moduleA",
+  "version": "1",
+  "main": "./release/moduleA.js"
+}

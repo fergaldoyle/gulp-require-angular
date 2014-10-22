@@ -6,6 +6,10 @@ var assert = require('stream-assert');
 
 require('mocha');
 
+console.log('Starting directory: ' + process.cwd());
+process.chdir('./test');
+console.log('New directory: ' + process.cwd());
+
 var fixtures = function (glob, dir) {
 	return path.join(__dirname, 'fixtures' + (dir ? dir : 'A'), glob);
 }
@@ -76,7 +80,7 @@ describe('gulp-require-angular', function () {
 
 		it('should include files where required modules (only) are defined and referenced', function (done) {
 			gulp.src(fixtures('**\/*.js'))
-				.pipe(requireAngular('myApp'))
+				.pipe(requireAngular('myApp', { relativeTo: './fixturesA' }))
 				.pipe(assert.first(function (f) {
 					f.contents.toString().should
 					.containEql('./app.js')
@@ -100,21 +104,24 @@ describe('gulp-require-angular', function () {
 				}))
 				.pipe(assert.end(done));
 		});
-
-		it('should rebase require url when base option is set', function (done) {
-			gulp.src(fixtures('**\/*.js'))
-				.pipe(requireAngular('myApp', { path: './foopath/' }))
-				.pipe(assert.first(function (f) {
-					f.contents.toString().should
-					.containEql('./foopath/app.js')
-					.and.containEql('./foopath/moduleA/moduleA.config.js')
-				}))
-				.pipe(assert.end(done));
-		});
-
-		it('should order the files correctly', function (done) {
+		/*
+		it('should find modules in bower.json', function (done) {
+			process.chdir('./test')
 			gulp.src(fixtures('**\/*.js'))
 				.pipe(requireAngular('myApp'))
+				.pipe(assert.first(function (f) {
+					//f.contents.toString().should
+					//.containEql('./foopath/app.js')
+					//.and.containEql('./foopath/moduleA/moduleA.config.js')
+				}))
+				.pipe(assert.end(done));
+
+			done();
+		});
+		*/
+		it('should order the files correctly', function (done) {
+			gulp.src(fixtures('**\/*.js'))
+				.pipe(requireAngular('myApp', { relativeTo: './fixturesA' }))
 				.pipe(assert.first(function (f) {
 					var lines = f.contents.toString().split('\n');
 					lines.indexOf("require('./app.js');")
@@ -125,7 +132,7 @@ describe('gulp-require-angular', function () {
 
 		it('should include third party modules', function (done) {
 			gulp.src(fixtures('**\/*.js', 'B'))
-				.pipe(requireAngular('thirdParty'))
+				.pipe(requireAngular('thirdParty', { relativeTo: './fixturesB' }))
 				.pipe(assert.first(function (f) {
 					f.contents.toString().should
 						.containEql('./app.js')
