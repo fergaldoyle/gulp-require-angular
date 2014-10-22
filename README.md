@@ -4,13 +4,10 @@ gulp-require-angular
 [![Build Status](https://travis-ci.org/fergaldoyle/gulp-require-angular.svg?branch=master)](https://travis-ci.org/fergaldoyle/gulp-require-angular)
 
 ### What
-A gulp plugin which scans your AngularJS project  source files and generates a single js file full of `require()` statements which can be then used as an entry file for Browserify or Webpack. Only AngularJS modules which appear in the dependency tree of your `mainModule` are `require()`'d.
+A gulp plugin which scans your AngularJS project  source files and generates a single js file full of `require()` statements which can be then used as an entry file for Browserify or Webpack. Only AngularJS modules which appear in the dependency tree of your `mainModule` are `require()`'d. Supports modules installed with bower too.
 
 ### Why
-I like the idea of `require()`ing with AngularJS but find it can get a bit messy, with lots of relative paths which are a pain if you want to move files around. Also something like this (which seems common enough) I don't like. (controller name in one file, controller function in another)
-```javascript	
-angular.module('myApp').controller('charts', require('./charts'));
-```
+So that the majority of your code base will be automatically `require()`'d in the correct order while still enabling you use `require()` where you want.
 
 ### How
 
@@ -79,17 +76,26 @@ mainModule is the name of the module entry point used to calculate the module de
 Object with the following default properties
 ```javascript
 {		
-    filename: 'gulp-require-angular.generated.js',
-    path: './',
-    errorOnMissingModules: false
+	filename: 'gulp-require-angular.generated.js',
+	rebase: './',
+	relativeTo: './src',
+	bower: false,
+	errorOnMissingModules: false
 }
 ```
 #####filename
-The name of the generated .js file
+The name of the generated .js file.
 
-#####path
-The base path to apply to the file paths in the require statements
+#####rebase
+The base path to apply to all require statements.
+
+#####relativeTo
+What directory will the require statements be relative to.
+
+#####bower
+To look for bower installed packages or not. If `true`, `bower.json` must be present. Will only look for bower packages with are installed, i.e. listed as dependencies in `bower.json`.
 
 #####errorOnMissingModules
 When a module appears in the dependency tree, but cannot be found in a file, emit an error or not.
+
 
