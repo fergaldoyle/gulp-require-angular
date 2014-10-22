@@ -27,7 +27,8 @@
     "event-stream": "^3.1.7",
     "ng-dependencies": "0.1.2",
     "extend": "^2.0.0",
-    "buffer": "^2.7.0"
+    "buffer": "^2.7.0",
+    "main-bower-files": "^2.1.0"
   },
   "devDependencies": {
     "should": "^4.0.4",
