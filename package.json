@@ -1,6 +1,6 @@
 {
   "name": "gulp-require-angular",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "require() AngularJS modules/dependencies without having to type require()",
   "main": "index.js",
   "scripts": {
