@@ -19,17 +19,7 @@ function output(a) {
 	});
 	return out;
 }
-/*
-console.log('Current directory: ' + process.cwd());
-var bowerFiles = mainBowerFiles();
-console.log('bowerFiles', bowerFiles);
-bowerFiles.forEach(function (file) {
-	var relative = path.relative('./src', file);
-	//console.log(relative);
-	var contents = fs.readFileSync(file);
-	//console.log(ngDep(contents));
-});
-*/
+
 function findRequiredModules(allModules, mainModule) {
 	// recursive function, dive into the dependencies
 	function dive(name) {
@@ -65,13 +55,13 @@ module.exports = function (mainModule, opts) {
 			filename: PLUGIN_NAME + '.generated.js',
 			rebase: './',
 			relativeTo: './src',
-			bower: true,
+			bower: false,
 			errorOnMissingModules: false
 		}, opts);
 
-	return es.through(function write(file) {
-		if (file.isStream()) return this.emit('error', new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-		var deps;
+	function findModules(file) {
+
+		var deps, relative;
 		try {
 			deps = ngDep(file.contents);
 		} catch (err) {
@@ -82,17 +72,48 @@ module.exports = function (mainModule, opts) {
 		extend(allModules, deps.modules);
 
 		// build up listing of file paths and deps
+		if (file.base) {
+			relative = path.relative(options.relativeTo, file.base + file.relative)
+		} else {
+			relative = file.relative;
+		}
+
 		files.push({
-			file: path.relative(options.relativeTo, file.base + file.relative).replace(/\\/g, '/'),
+			file: options.rebase + relative.replace(/\\/g, '/'),
 			deps: deps
 		});
+
+	}
+
+	return es.through(function write(file) {
+		if (file.isStream()) return this.emit('error', new PluginError(PLUGIN_NAME, 'Streaming not supported'));
+		findModules.call(this, file);
 	},
 	function end() {
 		var modules,
+			self = this,
 			defines = [],
 			references = [],
 			missing = [],
 			finalSet;
+
+		// search bower packages too
+		if (options.bower) {
+			try {
+				var bowerFiles = mainBowerFiles();
+			} catch (err) {
+				return this.emit('error', new PluginError(PLUGIN_NAME, 'main-bower-files error: ' + err.message))
+			}
+
+			bowerFiles.forEach(function (file) {
+				var relative = path.relative(options.relativeTo, file);
+				var contents = fs.readFileSync(file);
+				findModules.call(self, {
+					relative: relative,
+					contents: contents
+				});
+			});
+		}
 
 		// return only modules are in the dependency tree of mainModule
 		modules = findRequiredModules(allModules, mainModule);
@@ -107,11 +128,11 @@ module.exports = function (mainModule, opts) {
 			files.forEach(function (file) {
 				if (file.deps.modules[module]) {
 					if (!isFound) {
-						pushDistinct(defines, options.rebase + file.file);
+						pushDistinct(defines, file.file);
 						isFound = true;
 					}
 				} else if (file.deps.dependencies.indexOf(module) > -1) {
-					pushDistinct(references, options.rebase + file.file);
+					pushDistinct(references, file.file);
 				}
 			});
 			// if the module definition was not found in
