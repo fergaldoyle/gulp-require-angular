@@ -38,7 +38,7 @@ gulp.task('requireAngular-gulpWebpack', function () {
         		pathinfo: true
         	}
         }))
-        .pipe(gulp.dest('dist/'));
+        .pipe(gulp.dest('build/'));
 });
 
 // ################################################################### //
@@ -66,7 +66,7 @@ gulp.task('watch2', ['requireAngular-webpack'], function () {
 var compiler = webpack({
 	entry: './src/gulp-require-angular.generated.js',
 	output: {
-		filename: 'dist/bundle.js',
+		filename: 'build/bundle.js',
 		pathinfo: true
 	}
 });
