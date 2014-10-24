@@ -95,7 +95,7 @@ describe('gulp-require-angular', function () {
 					.and.containEql("'./moduleA/moduleA.service.js'")
 					.and.containEql("'./moduleA/moduleA.value.js'")
 					.and.not.containEql("'./moduleC/moduleC.js'")
-					.and.not.containEql("'./moduleC/moduleC.controller.js'")
+					.and.not.containEql("'./moduleC/moduleC.controller.js'");
 				}))
 				.pipe(assert.end(done));
 		});
@@ -120,7 +120,7 @@ describe('gulp-require-angular', function () {
 						.and.containEql("'./ui/angular-ui-router.js'")
 						.and.containEql("'./ui/keypress.js'")
 						.and.containEql("'./ng/angular-route.js'")
-						.and.containEql("'./ng/angular-sanitize.js'")
+						.and.containEql("'./ng/angular-sanitize.js'");
 				}))
 				//.pipe(gulp.dest('./'))
 				.pipe(assert.end(done));
@@ -133,7 +133,7 @@ describe('gulp-require-angular', function () {
 					f.contents.toString().should
 					.containEql("'./app.js'")
 					.and.containEql("'./../bower_components/moduleA/release/moduleA.js'")
-					.and.containEql("'./../bower_components/moduleB/release/moduleB.js'")
+					.and.containEql("'./../bower_components/moduleB/release/moduleB.js'");
 				}))
 				.pipe(gulp.dest('../'))
 				.pipe(assert.end(done));

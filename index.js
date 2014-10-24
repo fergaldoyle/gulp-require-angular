@@ -73,7 +73,7 @@ module.exports = function (mainModule, opts) {
 
 		// build up listing of file paths and deps
 		if (file.base) {
-			relative = path.relative(options.relativeTo, file.base + file.relative)
+			relative = path.relative(options.relativeTo, file.base + file.relative);
 		} else {
 			relative = file.relative;
 		}
@@ -95,14 +95,15 @@ module.exports = function (mainModule, opts) {
 			defines = [],
 			references = [],
 			missing = [],
-			finalSet;
+			finalSet,
+			bowerFiles;
 
 		// search bower packages too
 		if (options.bower) {
 			try {
-				var bowerFiles = mainBowerFiles();
+				bowerFiles = mainBowerFiles();
 			} catch (err) {
-				return this.emit('error', new PluginError(PLUGIN_NAME, 'main-bower-files error: ' + err.message))
+				return this.emit('error', new PluginError(PLUGIN_NAME, 'main-bower-files error: ' + err.message));
 			}
 
 			bowerFiles.forEach(function (file) {
