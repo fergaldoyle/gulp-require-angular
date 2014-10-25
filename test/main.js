@@ -75,7 +75,7 @@ describe('gulp-require-angular', function () {
 
 		it('should include files where required modules (only) are defined and referenced', function (done) {
 			gulp.src('.\/fixturesA/**\/*.js')
-				.pipe(requireAngular('myApp', { relativeTo: './fixturesA' }))
+				.pipe(requireAngular('myApp'))
 				.pipe(assert.first(function (f) {
 					f.contents.toString().should
 					.containEql("'./app.js'")
@@ -102,7 +102,7 @@ describe('gulp-require-angular', function () {
 
 		it('should order the files correctly', function (done) {
 			gulp.src('.\/fixturesA/**\/*.js')
-				.pipe(requireAngular('myApp', { relativeTo: './fixturesA' }))
+				.pipe(requireAngular('myApp'))
 				.pipe(assert.first(function (f) {
 					var lines = f.contents.toString().split('\n');
 					lines.indexOf("require('./app.js');")
@@ -113,7 +113,7 @@ describe('gulp-require-angular', function () {
 
 		it('should include third party modules', function (done) {
 			gulp.src('.\/fixturesB/**\/*.js')
-				.pipe(requireAngular('thirdParty', { relativeTo: './fixturesB' }))
+				.pipe(requireAngular('thirdParty'))
 				.pipe(assert.first(function (f) {
 					f.contents.toString().should
 						.containEql("'./app.js'")
@@ -128,7 +128,7 @@ describe('gulp-require-angular', function () {
 
 		it('should find modules in bower.json', function (done) {
 			gulp.src('.\/fixturesD/**\/*.js')
-				.pipe(requireAngular('myApp', { bower: true, relativeTo: './fixturesD' }))
+				.pipe(requireAngular('myApp', { bower: true }))
 				.pipe(assert.first(function (f) {
 					f.contents.toString().should
 					.containEql("'./app.js'")

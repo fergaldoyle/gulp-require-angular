@@ -54,11 +54,13 @@ module.exports = function (mainModule, opts) {
 		options = extend({
 			filename: PLUGIN_NAME + '.generated.js',
 			rebase: './',
-			relativeTo: './src',
+			base: '',
 			bower: false,
 			errorOnMissingModules: false,
 			mainBowerFiles: {}
 		}, opts);
+		
+	base = options.base;
 
 	function findModules(file) {
 
@@ -74,7 +76,7 @@ module.exports = function (mainModule, opts) {
 
 		// build up listing of file paths and deps
 		if (file.base) {
-			relative = path.relative(options.relativeTo, file.base + file.relative);
+			relative = path.relative(base, file.base + file.relative);
 		} else {
 			relative = file.relative;
 		}
@@ -88,10 +90,10 @@ module.exports = function (mainModule, opts) {
 
 	return es.through(function write(file) {
 		if (file.isStream()) return this.emit('error', new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-		findModules.call(this, file);
 		if(!base) {
 			base = file.base;
 		}
+		findModules.call(this, file);
 	},
 	function end() {
 		var modules,
@@ -111,7 +113,7 @@ module.exports = function (mainModule, opts) {
 			}
 
 			bowerFiles.forEach(function (file) {
-				var relative = path.relative(options.relativeTo, file);
+				var relative = path.relative(base, file);
 				var contents = fs.readFileSync(file);
 				findModules.call(self, {
 					relative: relative,
