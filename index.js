@@ -56,7 +56,8 @@ module.exports = function (mainModule, opts) {
 			rebase: './',
 			relativeTo: './src',
 			bower: false,
-			errorOnMissingModules: false
+			errorOnMissingModules: false,
+			mainBowerFiles: {}
 		}, opts);
 
 	function findModules(file) {
@@ -101,7 +102,7 @@ module.exports = function (mainModule, opts) {
 		// search bower packages too
 		if (options.bower) {
 			try {
-				bowerFiles = mainBowerFiles();
+				bowerFiles = mainBowerFiles(options.mainBowerFiles);
 			} catch (err) {
 				return this.emit('error', new PluginError(PLUGIN_NAME, 'main-bower-files error: ' + err.message));
 			}
@@ -157,9 +158,9 @@ module.exports = function (mainModule, opts) {
 
 		var file = new File();
 		file.contents = new Buffer(output(finalSet).trim());
-		file.base = __dirname;
-		file.path = __dirname + '/' + options.filename;
-
+		file.base = options.relativeTo;
+		file.path = options.relativeTo + '/' + options.filename;
+		
 		// if any module cannot be found, it will be in missing
 		var msg;
 		if (missing.length) {
