@@ -4,10 +4,18 @@ var gulpWebpack = require('gulp-webpack');
 var webpack = require('webpack');
 var requireAngular = require('gulp-require-angular');
 
-function logAndContinue(err) {
+function log(err) {
 	gutil.log(err.toString());
 }
 
+// globs for watch and requireAngular
+// ignore generated files to avoid
+// unnessesary watch callbacks and require recursion
+var jsFiles = [
+	'src/**/*.js',
+	'!src/gulp-require-angular.generated.js',
+	'!src/bundle.js'
+];
 
 // ################ Example using gulp-webpack plugin ################ //
 
@@ -16,17 +24,12 @@ function logAndContinue(err) {
 // inital build before any files are changed
 gulp.task('watch', ['requireAngular-gulpWebpack'], function () {
 	// make sure to ignore the generated js file
-	gulp.watch([
-		'src/**/*.js',
-		'!src/gulp-require-angular.generated.js'
-	], [
-		'requireAngular-gulpWebpack'
-	]);
+	gulp.watch(jsFiles, ['requireAngular-gulpWebpack']);
 });
 
 gulp.task('requireAngular-gulpWebpack', function () {
 
-	gulp.src(['src/**/*.js'])
+	gulp.src(jsFiles)
         .pipe(requireAngular('myApp'))
         // file needs to physically exist for webpack
 		// use gulp.dest to create it
@@ -52,12 +55,9 @@ gulp.task('requireAngular-gulpWebpack', function () {
 // 'requireAngular-webpack' is a dependency 
 // of the 'watch' task so will run to create an 
 // inital build before any files are changed
-gulp.task('watch2', ['requireAngular-webpack'], function () {
+gulp.task('watch2', ['requireAngular-webpack', 'someTaskAfterWebpack'], function () {
 	// make sure to ignore the generated js file
-	gulp.watch([
-		'src/**/*.js',
-		'!src/gulp-require-angular.generated.js'
-	], [
+	gulp.watch(jsFiles, [
 		'requireAngular-webpack',
 		'someTaskAfterWebpack'
 	]);
@@ -71,10 +71,10 @@ var compiler = webpack({
 	}
 });
 
-gulp.task('requireAngular-webpack', function (cb) {
+gulp.task('requireAngular-webpack', function (done) {
 	gulp.src(['src/**/*.js'])
         .pipe(requireAngular('myApp'))
-		.on('error', logAndContinue) // don't break watch on error
+		.on('error', log) // don't break watch on error
         .pipe(gulp.dest('src/'))
 		.on('end', function () {
 			// run the webpack compiler - will do fast incremental builds
@@ -85,14 +85,14 @@ gulp.task('requireAngular-webpack', function (cb) {
 					chunks: false
 				}));
 				// must callback to let gulp know when this task is finished
-				cb();
+				done();
 			});
 
 		});
 });
 
 gulp.task('someTaskAfterWebpack', ['requireAngular-webpack'], function () {
-	console.log('running someTaskAfterWebpack');
+	gutil.log('running someTaskAfterWebpack');
 });
 
 // ############################################################################################ //
