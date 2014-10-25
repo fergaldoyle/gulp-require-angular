@@ -1,3 +1,5 @@
 .gitignore
 demo/*
 test/*
+gulp-require-angular.generated.js
+gulpfile.js

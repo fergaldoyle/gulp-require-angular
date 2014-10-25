@@ -2,3 +2,4 @@
 node_modules/*
 demo/*/node_modules/*
 gulp-require-angular.generated.js
+test/npm-debug.log
