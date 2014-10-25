@@ -50,7 +50,7 @@ function pushDistinct(array, item) {
 
 module.exports = function (mainModule, opts) {
 	if (!mainModule) throw new PluginError(PLUGIN_NAME, 'Missing mainModule argument');
-	var files = [], allModules = {},
+	var files = [], allModules = {}, base,
 		options = extend({
 			filename: PLUGIN_NAME + '.generated.js',
 			rebase: './',
@@ -89,6 +89,9 @@ module.exports = function (mainModule, opts) {
 	return es.through(function write(file) {
 		if (file.isStream()) return this.emit('error', new PluginError(PLUGIN_NAME, 'Streaming not supported'));
 		findModules.call(this, file);
+		if(!base) {
+			base = file.base;
+		}
 	},
 	function end() {
 		var modules,
@@ -158,8 +161,8 @@ module.exports = function (mainModule, opts) {
 
 		var file = new File();
 		file.contents = new Buffer(output(finalSet).trim());
-		file.base = options.relativeTo;
-		file.path = options.relativeTo + '/' + options.filename;
+		file.base = base;
+		file.path = base + '/' + options.filename;
 		
 		// if any module cannot be found, it will be in missing
 		var msg;
