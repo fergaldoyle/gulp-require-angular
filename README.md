@@ -80,9 +80,9 @@ Object with the following default properties
 {		
 	filename: 'gulp-require-angular.generated.js',
 	rebase: './',
-	base: '',
-	bower: false,
+	base: '',	
 	errorOnMissingModules: false,
+	bower: false,
 	mainBowerFiles: {}
 }
 ```
@@ -95,14 +95,15 @@ The base path to apply to all require statements.
 #####base
 The directory to place the generated file. By default it is the base path of everything in `gulp.src`
 
-#####bower
-To look for bower installed packages or not. If `true`, `bower.json` must be present. Will only look for bower packages with are installed, i.e. listed as dependencies in `bower.json`.
-
 #####errorOnMissingModules
 When a module appears in the dependency tree, but cannot be found in a file, emit an error or not.
 
+#####bower
+To look for bower installed packages or not. If `true`, `bower.json` must be present. Will only look for bower packages which are installed, i.e. listed as dependencies in `bower.json`.
+
 #####mainBowerFiles
 Options object to pass through to [bower-main-files](https://github.com/ck86/main-bower-files)
+
 
 
 
