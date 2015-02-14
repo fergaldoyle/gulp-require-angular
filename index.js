@@ -1,5 +1,5 @@
 var es = require('event-stream');
-var ngDep = require('ng-dependencies');
+var parseNg = require('./parseNg');
 var extend = require('extend');
 var gutil = require('gulp-util');
 var Buffer = require('buffer').Buffer;
@@ -66,7 +66,7 @@ module.exports = function (mainModule, opts) {
 
 		var deps, relative;
 		try {
-			deps = ngDep(file.contents);
+			deps = parseNg(file.contents);
 		} catch (err) {
 			return this.emit('error', new PluginError(PLUGIN_NAME, 'Error in parsing: "' + file.relative + '", ' + err.message));
 		}
@@ -138,7 +138,7 @@ module.exports = function (mainModule, opts) {
 						pushDistinct(defines, file.file);
 						isFound = true;
 					}
-				} else if (file.deps.dependencies.indexOf(module) > -1) {
+				} else if (file.deps.references.indexOf(module) > -1) {
 					pushDistinct(references, file.file);
 				}
 			});
@@ -148,7 +148,7 @@ module.exports = function (mainModule, opts) {
 				pushDistinct(missing, module);
 			}
 		});
-
+        
 		// if a non existant mainModule is passed, defines will be empty
 		if (!defines.length) {
 			return this.emit('error', new PluginError(PLUGIN_NAME, 'Did not find any file where angular module \'' + mainModule + '\' is defined'));

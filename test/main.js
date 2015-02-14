@@ -95,7 +95,10 @@ describe('gulp-require-angular', function () {
 					.and.containEql("'./moduleA/moduleA.service.js'")
 					.and.containEql("'./moduleA/moduleA.value.js'")
 					.and.not.containEql("'./moduleC/moduleC.js'")
-					.and.not.containEql("'./moduleC/moduleC.controller.js'");
+					.and.not.containEql("'./moduleC/moduleC.controller.js'")
+                    .and.not.containEql("'./moduleE/moduleE.js'")
+                    .and.not.containEql("'./moduleE/moduleE.controller.js'");             
+                            
 				}))
 				.pipe(assert.end(done));
 		});
