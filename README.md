@@ -67,14 +67,14 @@ angular.module('pieChart', []).directive('pieChart', function () {
 ### Usage
 The plugin will only find modules if `angular.module` is used. If you alias the variable `angular` or have modules in minifed code, e.g.  `a.module`, it will not be found. You must use unminified versions of third party modules like ui-router, ngResource etc in your project src.
 
-####The function
+#### The function
 ```javascript
 requireAngular('mainModule', options);
 ```
-####mainModule
+#### mainModule
 mainModule is the name of the module entry point used to calculate the module dependency tree. This is your top level module, and is going to be the same module name found in `ng-app`.
 
-####options
+#### options
 Object with the following default properties
 ```javascript
 {		
@@ -86,22 +86,22 @@ Object with the following default properties
 	mainBowerFiles: {}
 }
 ```
-#####filename
+##### filename
 The name of the generated .js file.
 
-#####rebase
+##### rebase
 The base path to apply to all require statements.
 
-#####base
+##### base
 The directory to place the generated file. By default it is the base path of everything in `gulp.src`
 
-#####errorOnMissingModules
+##### errorOnMissingModules
 When a module appears in the dependency tree, but cannot be found in a file, emit an error or not.
 
-#####bower
+##### bower
 To look for bower installed packages or not. If `true`, `bower.json` must be present. Will only look for bower packages which are installed, i.e. listed as dependencies in `bower.json`.
 
-#####mainBowerFiles
+##### mainBowerFiles
 Options object to pass through to [bower-main-files](https://github.com/ck86/main-bower-files)
 
 
